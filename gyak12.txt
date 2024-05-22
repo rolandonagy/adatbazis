@@ -1,0 +1,235 @@
+Connected as roland.nagy2@stud.uni-corvinus.hu.
+Connected to cndb at cassandra.ingress:9042.
+[cqlsh 6.8.0 | Cassandra 4.0.0.6816 | CQL spec 3.4.5 | Native protocol v4 | TLS]
+Use HELP for help.
+token@cqlsh> show version;
+[cqlsh 6.8.0 | Cassandra 4.0.0.6816 | CQL spec 3.4.5 | Native protocol v4 | TLS]
+token@cqlsh> desc keyspaces;
+
+datastax_sla  system_schema       system_traces        
+system_auth   system              system_virtual_schema
+"Movies"      data_endpoint_auth  system_views         
+
+token@cqlsh> use "Movies"
+   ... 
+   ... ;
+token@cqlsh:Movies> select count(*)
+          ... from movies_and_tv
+          ... ;
+
+ count
+-------
+  3772
+
+(1 rows)
+
+Warnings :
+Aggregation query used without partition key
+
+token@cqlsh:Movies> describe tables;
+
+movies_and_tv
+
+token@cqlsh:Movies> Select title
+          ... from movies_and_tv
+          ... where type = 'Movie' AND release_year = 2018
+          ... LIMIT 3;
+
+ title
+---------------
+         #Roxy
+    14 Cameras
+ 1st Summoning
+
+(3 rows)
+token@cqlsh:Movies> SELECT COUNT(*)
+          ... 
+          ... ;
+SyntaxException: line 3:0 mismatched input ';' expecting K_FROM (SELECT COUNT(*)[;])
+token@cqlsh:Movies> SELECT type, release_year, COUNT(*)
+          ... FROM movies_and_tv
+          ... GROUP BY type, release_year
+          ... ;
+
+ type    | release_year | count
+---------+--------------+-------
+   Movie |         1958 |     2
+   Movie |         1965 |     2
+ TV Show |         2018 |    19
+   Movie |         1995 |    14
+   Movie |         2013 |   153
+   Movie |         1976 |     6
+   Movie |         2020 |     5
+   Movie |         2018 |   517
+   Movie |         1942 |     1
+   Movie |         1966 |     1
+ TV Show |         2011 |     2
+   Movie |         1978 |     7
+   Movie |         1968 |     3
+   Movie |         1972 |     3
+   Movie |         1980 |     7
+   Movie |         2008 |    84
+   Movie |         1959 |     1
+   Movie |         1993 |    14
+   Movie |         2014 |   189
+   Movie |         2005 |    49
+   Movie |         2007 |    56
+   Movie |         1994 |    12
+   Movie |         1947 |     1
+   Movie |         2012 |   113
+   Movie |         1996 |    14
+ TV Show |         1990 |     1
+   Movie |         1954 |     1
+   Movie |         1983 |     8
+   Movie |         1985 |     7
+   Movie |         1944 |     1
+   Movie |         1962 |     3
+   Movie |         1986 |     8
+ TV Show |         2020 |     1
+   Movie |         2011 |    92
+   Movie |         2000 |    28
+   Movie |         1991 |    11
+   Movie |         1979 |     6
+   Movie |         1990 |     9
+   Movie |         1946 |     2
+   Movie |         2002 |    35
+   Movie |         1964 |     1
+   Movie |         1998 |    22
+   Movie |         1956 |     1
+   Movie |         1987 |     5
+   Movie |         1974 |     7
+ TV Show |         2017 |    16
+   Movie |         2019 |   306
+   Movie |         1970 |     1
+   Movie |         2003 |    34
+ TV Show |         2008 |     1
+   Movie |         2001 |    29
+   Movie |         2015 |   315
+   Movie |         2010 |   101
+   Movie |         2017 |   569
+ TV Show |         2012 |     4
+   Movie |         2016 |   503
+   Movie |         1977 |     3
+ TV Show |         2016 |    10
+   Movie |         2004 |    40
+   Movie |         1981 |     6
+   Movie |         1955 |     1
+   Movie |         1984 |     8
+   Movie |         1989 |    10
+ TV Show |         2006 |     2
+   Movie |         1960 |     3
+   Movie |         2006 |    58
+ TV Show |         2001 |     1
+ TV Show |         2010 |     1
+   Movie |         1975 |     5
+   Movie |         1997 |    27
+ TV Show |         2015 |     9
+ TV Show |         2014 |     7
+   Movie |         1973 |     9
+ TV Show |         2013 |     2
+   Movie |         1999 |    17
+   Movie |         1945 |     1
+   Movie |         2009 |    86
+   Movie |         1971 |     3
+ TV Show |         2019 |    20
+   Movie |         1967 |     2
+   Movie |         1988 |    11
+   Movie |         1969 |     2
+   Movie |         1982 |    11
+   Movie |         1992 |    14
+
+(84 rows)
+
+Warnings :
+Aggregation query used without partition key
+
+token@cqlsh:Movies> CREATE TABLE Szemely(
+          ... nev TEXT,
+          ... szulev INT,
+          ... foglalkozas TEXT,
+          ... PRIMARY KEY((nev,szulev),foglalkozas)
+          ... ;
+SyntaxException: line 6:0 mismatched input ';' expecting ')' (...((nev,szulev),foglalkozas)[;])
+token@cqlsh:Movies> CREATE TABLE Szemely( nev TEXT, szulev INT, foglalkozas TEXT, PRIMARY KEY((nev,szulev),foglalkozas));
+token@cqlsh:Movies> describe;
+Improper describe command.
+token@cqlsh:Movies> desc;
+Improper desc command.
+token@cqlsh:Movies> describe tables;
+
+movies_and_tv  szemely
+
+token@cqlsh:Movies> 
+token@cqlsh:Movies> INSERT INTO Szemely (nev, szulev, foglalkozas) VALUES ('Kiss Bela', 2000, 'lakatos');
+token@cqlsh:Movies> INSERT INTO Szemely (nev, szulev, foglalkozas) VALUES ('Kiss Bela', 2000, 'lakatos');
+token@cqlsh:Movies> INSERT INTO Szemely (nev, szulev, foglalkozas) VALUES ('Nagy Ivo', 1999, 'diak');
+token@cqlsh:Movies> INSERT INTO Szemely (nev, szulev, foglalkozas) VALUES ('Toth Otto', 1980, 'pincer');
+token@cqlsh:Movies> 
+token@cqlsh:Movies> SELECT * FROM Szemely;
+
+ nev       | szulev | foglalkozas
+-----------+--------+-------------
+  Nagy Ivo |   1999 |        diak
+ Kiss Bela |   2000 |     lakatos
+ Toth Otto |   1980 |      pincer
+
+(3 rows)
+token@cqlsh:Movies> SELECT *
+          ... FROM szemely
+          ... ;
+
+ nev       | szulev | foglalkozas
+-----------+--------+-------------
+  Nagy Ivo |   1999 |        diak
+ Kiss Bela |   2000 |     lakatos
+ Toth Otto |   1980 |      pincer
+
+(3 rows)
+token@cqlsh:Movies> ALTER TABLE Szemely ADD Vegzettseg LIST<TEXT>;
+token@cqlsh:Movies> UPDATE Szemely SET Vegzettseg = ['gepesz', 'muszeresz'] WHERE nev = 'Kiss Bela' AND szulev = 2000 AND foglalkozas = 'lakatos';
+token@cqlsh:Movies> SELECT * FROM Szemely;
+
+ nev       | szulev | foglalkozas | vegzettseg
+-----------+--------+-------------+-------------------------
+  Nagy Ivo |   1999 |        diak |                    null
+ Kiss Bela |   2000 |     lakatos | ['gepesz', 'muszeresz']
+ Toth Otto |   1980 |      pincer |                    null
+
+(3 rows)
+token@cqlsh:Movies> ALTER TABLE Szemely ADD Nyelvtudas SET<TEXT>;
+
+token@cqlsh:Movies> 
+token@cqlsh:Movies> UPDATE Szemely SET Nyelvtudas = {'angol', 'francia'} WHERE nev = 'Nagy Ivo' AND szulev = 1999 AND foglalkozas = 'diak';
+token@cqlsh:Movies> SELECT * FROM Szemely;
+
+ nev       | szulev | foglalkozas | nyelvtudas           | vegzettseg
+-----------+--------+-------------+----------------------+-------------------------
+  Nagy Ivo |   1999 |        diak | {'angol', 'francia'} |                    null
+ Kiss Bela |   2000 |     lakatos |                 null | ['gepesz', 'muszeresz']
+ Toth Otto |   1980 |      pincer |                 null |                    null
+
+(3 rows)
+token@cqlsh:Movies> ALTER TABLE Szemely ADD Autok MAP<TEXT, TEXT>;
+token@cqlsh:Movies> UPDATE Szemely SET Autok = {'Skoda Fabia': 'abc-111', 'Audi A4': 'xyz-222'} WHERE nev = 'Kiss Bela' AND szulev = 2000 AND foglalkozas = 'lakatos';
+token@cqlsh:Movies> SELECT * FROM Szemely;
+
+ nev       | szulev | foglalkozas | autok                                            | nyelvtudas           | vegzettseg
+-----------+--------+-------------+--------------------------------------------------+----------------------+-------------------------
+  Nagy Ivo |   1999 |        diak |                                             null | {'angol', 'francia'} |                    null
+ Kiss Bela |   2000 |     lakatos | {'Audi A4': 'xyz-222', 'Skoda Fabia': 'abc-111'} |                 null | ['gepesz', 'muszeresz']
+ Toth Otto |   1980 |      pincer |                                             null |                 null |                    null
+
+(3 rows)
+token@cqlsh:Movies> UPDATE Szemely SET Nyelvtudas = Nyelvtudas + {'német'} WHERE nev = 'Nagy Ivo' AND szulev = 1999 AND foglalkozas = 'diak';
+token@cqlsh:Movies> 
+token@cqlsh:Movies> UPDATE Szemely SET Vegzettseg = Vegzettseg + ['bármixer'] WHERE nev = 'Toth Otto' AND szulev = 1980 AND foglalkozas = 'pincer';
+token@cqlsh:Movies> SELECT * FROM Szemely;
+
+ nev       | szulev | foglalkozas | autok                                            | nyelvtudas                    | vegzettseg
+-----------+--------+-------------+--------------------------------------------------+-------------------------------+-------------------------
+  Nagy Ivo |   1999 |        diak |                                             null | {'angol', 'francia', 'német'} |                    null
+ Kiss Bela |   2000 |     lakatos | {'Audi A4': 'xyz-222', 'Skoda Fabia': 'abc-111'} |                          null | ['gepesz', 'muszeresz']
+ Toth Otto |   1980 |      pincer |                                             null |                          null |            ['bármixer']
+
+(3 rows)
+token@cqlsh:Movies> 
